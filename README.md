@@ -1,45 +1,48 @@
-# HRMS Lite - Human Resource Management System
+# HRMS Lite
 
-A lightweight web-based HR management system for managing employee records and tracking daily attendance.
+A simple HR management system for handling employee records and attendance tracking.
+
+## What it does
+
+This application lets you manage employee information and track their daily attendance. You can add new employees, view their details, mark them present or absent, and see attendance history with filtering options.
 
 ## Tech Stack
 
-### Frontend
-- React 18 with TypeScript
-- Tailwind CSS for styling
-- Vite as build tool
+**Frontend**
+- React with TypeScript
+- Tailwind CSS
+- Vite
 
-### Backend
+**Backend**
 - FastAPI (Python)
-- Pydantic for validation
-- Supabase PostgreSQL for database
+- Supabase (PostgreSQL)
 
-### Deployment
-- Frontend: Vercel
-- Backend: Render
+**Deployment**
+- Frontend on Vercel
+- Backend on Render
 
 ## Features
 
 ### Employee Management
-- Add new employees with unique ID, name, email, and department
-- View all employees in a clean table
-- Delete employees (cascades to attendance records)
-- Email and duplicate ID validation
+- Add employees with ID, name, email, and department
+- View all employees in a table
+- Delete employees (removes their attendance too)
+- Validates email format and prevents duplicate IDs
 
-### Attendance Management
-- Mark daily attendance (Present/Absent)
-- View attendance history per employee
-- Update existing attendance records
-- Date validation (cannot mark future dates)
+### Attendance Tracking
+- Mark daily attendance as Present or Absent
+- View attendance history for each employee
+- Filter records by date range
+- See total present days count
+- Update existing attendance by marking the same date again
 
-## Database Setup (Supabase)
+## Getting Started
 
-1. Go to [supabase.com](https://supabase.com) and create a free account
-2. Create a new project
-3. Go to SQL Editor and run these commands:
+### Database Setup
+
+Create a Supabase account and run this SQL:
 
 ```sql
--- Create employees table
 CREATE TABLE employees (
   employee_id TEXT PRIMARY KEY,
   full_name TEXT NOT NULL,
@@ -48,7 +51,6 @@ CREATE TABLE employees (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Create attendance table
 CREATE TABLE attendance (
   id SERIAL PRIMARY KEY,
   employee_id TEXT NOT NULL REFERENCES employees(employee_id) ON DELETE CASCADE,
@@ -58,110 +60,72 @@ CREATE TABLE attendance (
   UNIQUE(employee_id, date)
 );
 
--- Create indexes for better performance
 CREATE INDEX idx_attendance_employee ON attendance(employee_id);
 CREATE INDEX idx_attendance_date ON attendance(date);
 ```
 
-4. Get your credentials:
-   - Go to Project Settings > API
-   - Copy the `URL` (SUPABASE_URL)
-   - Copy the `anon public` key (SUPABASE_KEY)
+Save your Supabase URL and anon key from the API settings.
 
-## Local Development Setup
+### Running Locally
 
-### Backend Setup
-
-1. Navigate to backend directory:
+**Backend:**
 ```bash
 cd backend
-```
-
-2. Create virtual environment:
-```bash
 python -m venv venv
 venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
 pip install -r requirements.txt
 ```
 
-4. Create `.env` file:
-```env
-SUPABASE_URL=your_supabase_url_here
-SUPABASE_KEY=your_supabase_anon_key_here
+Create `backend/.env`:
+```
+SUPABASE_URL=your_url
+SUPABASE_KEY=your_key
 ```
 
-5. Run the server:
+Start server:
 ```bash
 uvicorn main:app --reload
 ```
 
-Backend will run on `http://localhost:8000`
-
-### Frontend Setup
-
-1. Navigate to frontend directory:
+**Frontend:**
 ```bash
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
 ```
 
-3. Create `.env` file:
-```env
+Create `frontend/.env`:
+```
 VITE_API_URL=http://localhost:8000
 ```
 
-4. Run development server:
+Start dev server:
 ```bash
 npm run dev
 ```
 
-Frontend will run on `http://localhost:5173`
+Open http://localhost:5173
 
 ## Deployment
 
-### Backend Deployment (Render)
+**Backend (Render):**
+- Connect your GitHub repo
+- Set build command: `pip install -r requirements.txt`
+- Set start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Add environment variables for Supabase
 
-1. Push your code to GitHub
-2. Go to [render.com](https://render.com) and create account
-3. Click "New +" > "Web Service"
-4. Connect your GitHub repository
-5. Configure:
-   - Name: `hrms-lite-backend`
-   - Environment: `Python 3`
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. Add environment variables:
-   - `SUPABASE_URL`: your Supabase URL
-   - `SUPABASE_KEY`: your Supabase anon key
-7. Deploy
-
-### Frontend Deployment (Vercel)
-
-1. Push your code to GitHub
-2. Go to [vercel.com](https://vercel.com) and import project
-3. Configure:
-   - Framework Preset: Vite
-   - Root Directory: `frontend`
-4. Add environment variable:
-   - `VITE_API_URL`: your Render backend URL
-5. Deploy
+**Frontend (Vercel):**
+- Import your GitHub repo
+- Set framework preset to Vite
+- Add `VITE_API_URL` environment variable with your Render backend URL
 
 ## Project Structure
 
 ```
 hrms-lite/
 ├── backend/
-│   ├── main.py              
-│   ├── requirements.txt     
-│   └── .env                 
+│   ├── main.py
+│   ├── requirements.txt
+│   └── .env
 │
 ├── frontend/
 │   ├── src/
@@ -170,45 +134,33 @@ hrms-lite/
 │   │   │   ├── EmployeeList.tsx
 │   │   │   └── AttendanceManager.tsx
 │   │   ├── App.tsx
-│   │   ├── api.ts          
-│   │   ├── types.ts        
+│   │   ├── api.ts
+│   │   ├── types.ts
 │   │   ├── main.tsx
 │   │   └── index.css
 │   ├── index.html
 │   ├── package.json
-│   ├── tailwind.config.js
-│   ├── vite.config.ts
-│   ├── tsconfig.json
-│   └── .env                
+│   └── vite.config.ts
 │
 └── README.md
 ```
 
 ## API Endpoints
 
-### Employees
-- `POST /employees` - Create new employee
-- `GET /employees` - Get all employees
-- `DELETE /employees/{employee_id}` - Delete employee
+```
+GET    /employees              - List all employees
+POST   /employees              - Create employee
+DELETE /employees/{id}         - Delete employee
 
-### Attendance
-- `POST /attendance` - Mark attendance (creates or updates)
-- `GET /attendance/{employee_id}` - Get employee attendance history
-- `GET /attendance` - Get all attendance records
+POST   /attendance             - Mark attendance
+GET    /attendance/{id}        - Get employee attendance
+GET    /attendance             - Get all attendance
+```
 
-## Assumptions & Limitations
+## Notes
 
-- Single admin user (no authentication required)
-- Cannot mark attendance for future dates
-- Deleting an employee removes all their attendance records
-- Attendance can be updated by marking the same date again
-- Employee ID and email must be unique
-- No payroll or leave management features
-
-## Development Notes
-
-- The application handles loading states, empty states, and errors gracefully
-- All forms include proper validation
-- The UI is responsive and works on mobile devices
-- API responses include proper HTTP status codes
-- Database uses cascading deletes for referential integrity
+- No authentication needed (single admin assumed)
+- Deleting an employee removes their attendance records
+- Can't mark attendance for future dates
+- Marking the same date twice updates the existing record
+- Employee IDs and emails must be unique

@@ -28,9 +28,7 @@ function EmployeeList({ onDelete }: EmployeeListProps) {
   };
 
   const handleDelete = async (employeeId: string) => {
-    if (!confirm('Are you sure you want to delete this employee? This will also delete all their attendance records.')) {
-      return;
-    }
+    if (!confirm('Are you sure you want to delete this employee?')) return;
 
     setDeletingId(employeeId);
     try {
@@ -46,9 +44,9 @@ function EmployeeList({ onDelete }: EmployeeListProps) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center justify-center h-48">
-          <div className="text-gray-500">Loading employees...</div>
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 p-6">
+        <div className="flex items-center justify-center h-40 text-gray-300">
+          Loading employees...
         </div>
       </div>
     );
@@ -56,8 +54,8 @@ function EmployeeList({ onDelete }: EmployeeListProps) {
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-red-500/30 p-6">
+        <div className="bg-red-900/30 border border-red-500/50 text-red-300 px-4 py-3 rounded-md text-sm">
           {error}
         </div>
       </div>
@@ -66,12 +64,9 @@ function EmployeeList({ onDelete }: EmployeeListProps) {
 
   if (employees.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex flex-col items-center justify-center h-48 text-gray-500">
-          <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          <p>No employees found</p>
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 p-6">
+        <div className="flex flex-col items-center justify-center h-40 text-gray-400">
+          <p className="text-lg">No employees found</p>
           <p className="text-sm mt-1">Add your first employee to get started</p>
         </div>
       </div>
@@ -79,54 +74,59 @@ function EmployeeList({ onDelete }: EmployeeListProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900">All Employees ({employees.length})</h2>
+    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 overflow-hidden">
+
+      <div className="px-6 py-4 border-b border-teal-500/20">
+        <h2 className="text-xl font-semibold text-white">
+          All Employees ({employees.length})
+        </h2>
       </div>
-      
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-slate-900/60">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Employee ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Full Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Department
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+              {["Employee ID", "Full Name", "Email", "Department", "Actions"].map((head) => (
+                <th
+                  key={head}
+                  className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider"
+                >
+                  {head}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+
+          <tbody className="divide-y divide-teal-500/10">
             {employees.map((employee) => (
-              <tr key={employee.employee_id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <tr
+                key={employee.employee_id}
+                className="hover:bg-teal-500/5 transition"
+              >
+                <td className="px-6 py-4 text-sm text-white font-medium">
                   {employee.employee_id}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+
+                <td className="px-6 py-4 text-sm text-gray-200">
                   {employee.full_name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+
+                <td className="px-6 py-4 text-sm text-gray-400">
                   {employee.email}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+
+                <td className="px-6 py-4 text-sm text-gray-400">
                   {employee.department}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
+
+                <td className="px-6 py-4 text-sm">
                   <button
                     onClick={() => handleDelete(employee.employee_id)}
                     disabled={deletingId === employee.employee_id}
-                    className="text-red-600 hover:text-red-800 disabled:text-red-400 disabled:cursor-not-allowed"
-                  >
-                    {deletingId === employee.employee_id ? 'Deleting...' : 'Delete'}
+                    className="px-4 py-1 rounded-md text-xs font-medium 
+                      bg-red-500/10 text-red-400 border border-red-500/30
+                      hover:bg-red-500/20 transition
+                      disabled:opacity-50">
+                    {deletingId === employee.employee_id ? "Deleting..." : "Delete"}
                   </button>
                 </td>
               </tr>

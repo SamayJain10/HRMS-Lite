@@ -106,8 +106,8 @@ function AttendanceManager() {
 
   if (employees.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex flex-col items-center justify-center h-48 text-gray-500">
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 p-6">
+        <div className="flex flex-col items-center justify-center h-48 text-gray-400">
           <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -122,20 +122,20 @@ function AttendanceManager() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Mark Attendance</h2>
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 p-6">
+        <h2 className="text-xl font-semibold text-white mb-4">Mark Attendance</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="employee" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="employee" className="block text-sm font-medium text-gray-300 mb-1">
                 Select Employee
               </label>
               <select
                 id="employee"
                 value={selectedEmployee}
                 onChange={(e) => setSelectedEmployee(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               >
                 {employees.map((emp) => (
                   <option key={emp.employee_id} value={emp.employee_id}>
@@ -146,7 +146,7 @@ function AttendanceManager() {
             </div>
 
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="date" className="block text-sm font-medium text-gray-300 mb-1">
                 Date
               </label>
               <input
@@ -156,19 +156,19 @@ function AttendanceManager() {
                 onChange={(e) => setDate(e.target.value)}
                 max={new Date().toISOString().split('T')[0]}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="status" className="block text-sm font-medium text-gray-300 mb-1">
                 Status
               </label>
               <select
                 id="status"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'Present' | 'Absent')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               >
                 <option value="Present">Present</option>
                 <option value="Absent">Absent</option>
@@ -177,7 +177,7 @@ function AttendanceManager() {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+            <div className="bg-red-900/30 border border-red-500/50 text-red-300 px-4 py-3 rounded-md text-sm">
               {error}
             </div>
           )}
@@ -185,7 +185,7 @@ function AttendanceManager() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full md:w-auto px-6 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-teal-500/30"
           >
             {loading ? 'Marking...' : 'Mark Attendance'}
           </button>
@@ -193,22 +193,22 @@ function AttendanceManager() {
       </div>
 
       {selectedEmployeeData && (
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 overflow-hidden">
+          <div className="px-6 py-4 border-b border-teal-500/20">
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-white">
                   Attendance History - {selectedEmployeeData.full_name}
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Total Present Days: <span className="font-semibold text-green-600">{getTotalPresentDays()}</span>
+                <p className="text-sm text-gray-400 mt-1">
+                  Total Present Days: <span className="font-semibold text-teal-400">{getTotalPresentDays()}</span>
                 </p>
               </div>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-4 items-end">
               <div>
-                <label htmlFor="filterStartDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="filterStartDate" className="block text-sm font-medium text-gray-300 mb-1">
                   From Date
                 </label>
                 <input
@@ -216,12 +216,12 @@ function AttendanceManager() {
                   id="filterStartDate"
                   value={filterStartDate}
                   onChange={(e) => setFilterStartDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label htmlFor="filterEndDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="filterEndDate" className="block text-sm font-medium text-gray-300 mb-1">
                   To Date
                 </label>
                 <input
@@ -229,46 +229,46 @@ function AttendanceManager() {
                   id="filterEndDate"
                   value={filterEndDate}
                   onChange={(e) => setFilterEndDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 />
               </div>
 
               {(filterStartDate || filterEndDate) && (
                 <button
                   onClick={clearFilters}
-                  className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                  className="px-4 py-2 text-sm bg-slate-700/50 text-gray-300 rounded-md hover:bg-slate-700 transition-colors"
                 >
                   Clear Filters
                 </button>
               )}
 
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-400">
                 Showing {filteredRecords.length} of {attendanceRecords.length} records
               </div>
             </div>
           </div>
 
           {filteredRecords.length === 0 ? (
-            <div className="px-6 py-12 text-center text-gray-500">
+            <div className="px-6 py-12 text-center text-gray-400">
               <p>{attendanceRecords.length === 0 ? 'No attendance records found' : 'No records match your filter'}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-slate-900/50 border-b border-teal-500/20">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Status
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-teal-500/10">
                   {filteredRecords.map((record, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={index} className="hover:bg-slate-900/30 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                         {new Date(record.date).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -279,8 +279,8 @@ function AttendanceManager() {
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             record.status === 'Present'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
+                              ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                              : 'bg-red-500/20 text-red-300 border border-red-500/30'
                           }`}
                         >
                           {record.status}

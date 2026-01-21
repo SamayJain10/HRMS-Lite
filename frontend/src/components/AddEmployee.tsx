@@ -36,13 +36,13 @@ function AddEmployee({ onSuccess }: AddEmployeeProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Add New Employee</h2>
+    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl shadow-xl border border-teal-500/20 p-6">
+      <h2 className="text-xl font-semibold text-white mb-4">Add New Employee</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="employee_id" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="employee_id" className="block text-sm font-medium text-gray-300 mb-1">
               Employee ID
             </label>
             <input
@@ -52,12 +52,12 @@ function AddEmployee({ onSuccess }: AddEmployeeProps) {
               value={formData.employee_id}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="full_name" className="block text-sm font-medium text-gray-300 mb-1">
               Full Name
             </label>
             <input
@@ -67,12 +67,12 @@ function AddEmployee({ onSuccess }: AddEmployeeProps) {
               value={formData.full_name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email Address
             </label>
             <input
@@ -82,12 +82,12 @@ function AddEmployee({ onSuccess }: AddEmployeeProps) {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="department" className="block text-sm font-medium text-gray-300 mb-1">
               Department
             </label>
             <input
@@ -97,13 +97,13 @@ function AddEmployee({ onSuccess }: AddEmployeeProps) {
               value={formData.department}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-slate-900/50 border border-teal-500/30 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             />
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+          <div className="bg-red-900/30 border border-red-500/50 text-red-300 px-4 py-3 rounded-md text-sm">
             {error}
           </div>
         )}
@@ -111,7 +111,7 @@ function AddEmployee({ onSuccess }: AddEmployeeProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+          className="w-full md:w-auto px-6 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-teal-500/30"
         >
           {loading ? 'Adding...' : 'Add Employee'}
         </button>

@@ -6,10 +6,13 @@ function AttendanceManager() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<AttendanceRecord[]>([]);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [status, setStatus] = useState<'Present' | 'Absent'>('Present');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [filterStartDate, setFilterStartDate] = useState('');
+  const [filterEndDate, setFilterEndDate] = useState('');
 
   useEffect(() => {
     loadEmployees();
@@ -20,6 +23,43 @@ function AttendanceManager() {
       loadAttendance(selectedEmployee);
     }
   }, [selectedEmployee]);
+
+  useEffect(() => {
+    filterAttendanceByDate();
+  }, [attendanceRecords, filterStartDate, filterEndDate]);
+
+  const filterAttendanceByDate = () => {
+    if (!filterStartDate && !filterEndDate) {
+      setFilteredRecords(attendanceRecords);
+      return;
+    }
+
+    const filtered = attendanceRecords.filter(record => {
+      const recordDate = new Date(record.date);
+      const start = filterStartDate ? new Date(filterStartDate) : null;
+      const end = filterEndDate ? new Date(filterEndDate) : null;
+
+      if (start && end) {
+        return recordDate >= start && recordDate <= end;
+      } else if (start) {
+        return recordDate >= start;
+      } else if (end) {
+        return recordDate <= end;
+      }
+      return true;
+    });
+
+    setFilteredRecords(filtered);
+  };
+
+  const getTotalPresentDays = () => {
+    return attendanceRecords.filter(record => record.status === 'Present').length;
+  };
+
+  const clearFilters = () => {
+    setFilterStartDate('');
+    setFilterEndDate('');
+  };
 
   const loadEmployees = async () => {
     try {
@@ -37,6 +77,7 @@ function AttendanceManager() {
     try {
       const data = await api.getEmployeeAttendance(employeeId);
       setAttendanceRecords(data);
+      setFilteredRecords(data);
     } catch (err) {
       console.error('Failed to load attendance:', err);
     }
@@ -52,8 +93,8 @@ function AttendanceManager() {
     try {
       await api.markAttendance({
         employee_id: selectedEmployee,
-        status,
         date,
+        status,
       });
       await loadAttendance(selectedEmployee);
     } catch (err) {
@@ -154,14 +195,62 @@ function AttendanceManager() {
       {selectedEmployeeData && (
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">
-              Attendance History - {selectedEmployeeData.full_name}
-            </h2>
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Attendance History - {selectedEmployeeData.full_name}
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Total Present Days: <span className="font-semibold text-green-600">{getTotalPresentDays()}</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-4 items-end">
+              <div>
+                <label htmlFor="filterStartDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  From Date
+                </label>
+                <input
+                  type="date"
+                  id="filterStartDate"
+                  value={filterStartDate}
+                  onChange={(e) => setFilterStartDate(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="filterEndDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  To Date
+                </label>
+                <input
+                  type="date"
+                  id="filterEndDate"
+                  value={filterEndDate}
+                  onChange={(e) => setFilterEndDate(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {(filterStartDate || filterEndDate) && (
+                <button
+                  onClick={clearFilters}
+                  className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                >
+                  Clear Filters
+                </button>
+              )}
+
+              <div className="text-sm text-gray-600">
+                Showing {filteredRecords.length} of {attendanceRecords.length} records
+              </div>
+            </div>
           </div>
 
-          {attendanceRecords.length === 0 ? (
+          {filteredRecords.length === 0 ? (
             <div className="px-6 py-12 text-center text-gray-500">
-              <p>No attendance records found</p>
+              <p>{attendanceRecords.length === 0 ? 'No attendance records found' : 'No records match your filter'}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -177,7 +266,7 @@ function AttendanceManager() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {attendanceRecords.map((record, index) => (
+                  {filteredRecords.map((record, index) => (
                     <tr key={index} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {new Date(record.date).toLocaleDateString('en-US', {

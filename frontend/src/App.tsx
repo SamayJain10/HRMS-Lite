@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import EmployeeList from './components/EmployeeList';
 import AddEmployee from './components/AddEmployee';
 import AttendanceManager from './components/AttendanceManager';
